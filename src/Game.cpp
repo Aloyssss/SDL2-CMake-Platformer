@@ -22,34 +22,17 @@ bool Game::init(const char* title, int width, int height)
     // Init engine components
     _windowManager = std::make_unique<WindowManager>("Game", SCREEN_WIDTH, SCREEN_HEIGHT);
     _textManager = std::make_unique<TextManager>(_windowManager->getRenderer());
-
-
-    //// SUITE = CACA à ranger
-
-    // init img
-    if (IMG_Init(IMG_INIT_PNG) < 0)
-    {
-        std::cerr << "SDL_image could not initialize! IMG_Error: " << IMG_GetError() << std::endl;
-        return false;
-    }
+    _textureManager = std::make_unique<TextureManager>(_windowManager->getRenderer());
 
     // Init player textures
-    SDL_Surface* image = IMG_Load("./ressources/texture_atlas/hero-atlas.png");
-    if (!image)
-    {
-        std::cerr << "Failed to load image.png: " << IMG_GetError() << std::endl;
-    }
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(_windowManager->getRenderer(), image);
+    _textureManager->loadTexture("player_atlas", "./ressources/texture_atlas/hero-atlas.png");
+    _player = std::make_unique<Player>(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, _textureManager->getTexture("player_atlas"));
 
-    _player = std::make_unique<Player>(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, texture);
-
-    ///////
+    _textureManager->loadTexture("bg1", "./ressources/texture_atlas/background.png");
+    _bgLayer1 = std::make_unique<BackgroundLayer>(0.f, 0.f, 200.f, _textureManager->getTexture("bg1"));
 
     // Init fonts
-    if (!_textManager->loadFont("default", "ressources/fonts/RobotoCondensed-Regular.ttf", 14))
-    {
-        return false;
-    }
+    _textManager->loadFont("default", "ressources/fonts/RobotoCondensed-Regular.ttf", 14);
 
     _isRunning = true;
     return true;
@@ -57,8 +40,6 @@ bool Game::init(const char* title, int width, int height)
 
 void Game::cleanup()
 {
-    IMG_Quit();
-
     // Quit functions
     if (SDL_WasInit(SDL_INIT_EVERYTHING))
         SDL_Quit();
@@ -82,7 +63,11 @@ void Game::handleEvents()
 void Game::update()
 {
     // TODO : Add game logic, update game objects
-    _player->update(_frameTimer.getFrameTime());
+    _player->update(_frameTimer.getFrameTimeS());
+
+    // Background update based on player position
+    _bgLayer1->setScrollSpeed((_player->getVelocity().x) * _player->getSpeed());
+    _bgLayer1->update(_frameTimer.getFrameTimeS());
 }
 
 void Game::render()
@@ -90,8 +75,12 @@ void Game::render()
     // Clear screen
     _windowManager->clear();
 
-    // Draw game objects here
     // TODO : Draw game objects
+
+    // Draw background
+    _bgLayer1->render(_windowManager->getRenderer());
+
+    // Draw entities
     _player->render(_windowManager->getRenderer());
 
     // Show window debug infos (fps and average fps)
@@ -103,6 +92,8 @@ void Game::render()
     _textManager->renderText("default", fpsStr, fg, dest);
     dest.y += 24;
     _textManager->renderText("default", avgStr, fg, dest);
+    dest.y += 24;
+    _textManager->renderText("default", "Version 0.1.12", fg, dest);
 #endif
 
     // Draw everything to the screen

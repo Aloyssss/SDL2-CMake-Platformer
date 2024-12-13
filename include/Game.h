@@ -3,18 +3,22 @@
 /* Includes */
 #include "WindowManager.h"
 #include "TextManager.h"
+#include "TextureManager.h"
 
 #include "Player.h"
+#include "BackgroundLayer.h"
 
 /* FrameTimer class definition */
 class FrameTimer
 {
 public:
-	void startFrame() {
+	void startFrame() 
+	{
 		frameStart = SDL_GetTicks();
 	}
 
-	void endFrame(Uint32 frameDelay) {
+	void endFrame(Uint32 frameDelay) 
+	{
 		frameTime = SDL_GetTicks() - frameStart;
 		if (frameTime < frameDelay) 
 		{
@@ -26,7 +30,8 @@ public:
 		framePerSecond = 1000.0f / (float)frameTime;
 	}
 
-	float getFrameTime() const { return frameTime; }
+	float getFrameTimeMs() const { return float(frameTime); }
+	float getFrameTimeS() const { return float(frameTime) / 1000.f; }
 
 	float getCurrentFPS() const { return framePerSecond; }
 	float getAverageFPS() const { return totalFrames > 0 ? 1000.0f / ((float)totalFrameTicks / totalFrames) : 0.0f; }
@@ -61,6 +66,7 @@ private:
 	// Engine components variables
 	std::unique_ptr<WindowManager> _windowManager;
 	std::unique_ptr<TextManager> _textManager;
+	std::unique_ptr<TextureManager> _textureManager;
 	FrameTimer _frameTimer;
 
 	// Game loop variables
@@ -68,4 +74,5 @@ private:
 
 	// Game objects
 	std::unique_ptr<Player> _player;
+	std::unique_ptr<BackgroundLayer> _bgLayer1;
 };
