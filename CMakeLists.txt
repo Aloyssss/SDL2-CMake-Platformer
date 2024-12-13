@@ -1,46 +1,59 @@
-﻿cmake_minimum_required(VERSION 3.15)
-project(SDL2_Platformer)
+﻿# Définir la version minimale de CMake et le nom du projet
+cmake_minimum_required(VERSION 3.16)
+project(PlatformerGame CXX)
 
-# Spécifiez le standard C++
+# Définir le standard C++
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Ajout des fichiers source
-file(GLOB_RECURSE SOURCES src/*.cpp)
+# Ajouter les répertoires include et src
 include_directories(include)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-# Chemin d'accès vers les ressources
-set(RC_PATH ${CMAKE_SOURCE_DIR}/ressources)
+# Ajouter les chemins d'inclusion
+include_directories(
+    ${CMAKE_SOURCE_DIR}/external/SDL2-2.30.10/include
+    ${CMAKE_SOURCE_DIR}/external/SDL2_image-2.8.2/include
+    ${CMAKE_SOURCE_DIR}/external/SDL2_mixer-2.8.0/include
+    ${CMAKE_SOURCE_DIR}/external/SDL2_ttf-2.22.0/include
+)
 
-# Ajouter le chemin vers les librairies
-set(SDL2_PATH ${CMAKE_SOURCE_DIR}/external/SDL2) # SDL2
-set(SDL2_TTF_PATH ${CMAKE_SOURCE_DIR}/external/SDL2_ttf) # SDL2_ttf
-
-# Inclure SDL2
-include_directories(${SDL2_PATH}/include)
-link_directories(${SDL2_PATH}/lib/x64)
-
-# Inclure SDL2_ttf
-include_directories(${SDL2_TTF_PATH}/include)
-link_directories(${SDL2_TTF_PATH}/lib/x64)
+link_directories(
+    ${CMAKE_SOURCE_DIR}/external/SDL2-2.30.10/lib/x64
+    ${CMAKE_SOURCE_DIR}/external/SDL2_image-2.8.2/lib/x64
+    ${CMAKE_SOURCE_DIR}/external/SDL2_mixer-2.8.0/lib/x64
+    ${CMAKE_SOURCE_DIR}/external/SDL2_ttf-2.22.0/lib/x64
+)
 
 # Ajouter l'exécutable
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Lier SDL2
-target_link_libraries(${PROJECT_NAME} SDL2 SDL2main SDL2_ttf)
+# Lier SDL2 et ses extensions à l'exécutable
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    SDL2
+    SDL2main
+    SDL2_image
+    SDL2_mixer
+    SDL2_ttf
+)
 
-# Copier le dossier ressources vers le dossier de sortie
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${RC_PATH}
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/ressources)
-
-# Copier les DLL dans le dossier de sortie
-if(WIN32)
+# Copier les DLL nécessaires
+if (WIN32)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${SDL2_PATH}/lib/x64/SDL2.dll
-        ${SDL2_TTF_PATH}/lib/x64/SDL2_ttf.dll
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+        "${CMAKE_SOURCE_DIR}/external/SDL2-2.30.10/lib/x64/SDL2.dll"
+        "${CMAKE_SOURCE_DIR}/external/SDL2_image-2.8.2/lib/x64/SDL2_image.dll"
+        "${CMAKE_SOURCE_DIR}/external/SDL2_mixer-2.8.0/lib/x64/SDL2_mixer.dll"
+        "${CMAKE_SOURCE_DIR}/external/SDL2_ttf-2.22.0/lib/x64/SDL2_ttf.dll"
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>
+    )
 endif()
+
+
+# Copier le dossier ressources dans le dossier de sortie
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/ressources"
+    "${CMAKE_BINARY_DIR}/ressources"
+)

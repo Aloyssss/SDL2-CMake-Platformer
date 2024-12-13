@@ -4,6 +4,8 @@
 #include "WindowManager.h"
 #include "TextManager.h"
 
+#include "Player.h"
+
 /* FrameTimer class definition */
 class FrameTimer
 {
@@ -23,6 +25,8 @@ public:
 		totalFrames++;
 		framePerSecond = 1000.0f / (float)frameTime;
 	}
+
+	float getFrameTime() const { return frameTime; }
 
 	float getCurrentFPS() const { return framePerSecond; }
 	float getAverageFPS() const { return totalFrames > 0 ? 1000.0f / ((float)totalFrameTicks / totalFrames) : 0.0f; }
@@ -63,5 +67,5 @@ private:
 	bool _isRunning;
 
 	// Game objects
-
+	std::unique_ptr<Player> _player;
 };

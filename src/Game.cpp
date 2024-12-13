@@ -1,7 +1,8 @@
 #include "Game.h"
 
 Game::Game()
-    : _windowManager(nullptr), _textManager(nullptr), _isRunning(false) {
+    : _isRunning(false)
+{
 }
 
 Game::~Game()
@@ -12,7 +13,8 @@ Game::~Game()
 bool Game::init(const char* title, int width, int height)
 {
     // SDL init, must be the first init called
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) 
+    {
         std::cerr << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
         return false;
     }
@@ -21,8 +23,31 @@ bool Game::init(const char* title, int width, int height)
     _windowManager = std::make_unique<WindowManager>("Game", SCREEN_WIDTH, SCREEN_HEIGHT);
     _textManager = std::make_unique<TextManager>(_windowManager->getRenderer());
 
+
+    //// SUITE = CACA à ranger
+
+    // init img
+    if (IMG_Init(IMG_INIT_PNG) < 0)
+    {
+        std::cerr << "SDL_image could not initialize! IMG_Error: " << IMG_GetError() << std::endl;
+        return false;
+    }
+
+    // Init player textures
+    SDL_Surface* image = IMG_Load("./ressources/texture_atlas/hero-atlas.png");
+    if (!image)
+    {
+        std::cerr << "Failed to load image.png: " << IMG_GetError() << std::endl;
+    }
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(_windowManager->getRenderer(), image);
+
+    _player = std::make_unique<Player>(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, texture);
+
+    ///////
+
     // Init fonts
-    if (!_textManager->loadFont("default", "ressources/fonts/RobotoCondensed-Regular.ttf", 14)) {
+    if (!_textManager->loadFont("default", "ressources/fonts/RobotoCondensed-Regular.ttf", 14))
+    {
         return false;
     }
 
@@ -32,6 +57,8 @@ bool Game::init(const char* title, int width, int height)
 
 void Game::cleanup()
 {
+    IMG_Quit();
+
     // Quit functions
     if (SDL_WasInit(SDL_INIT_EVERYTHING))
         SDL_Quit();
@@ -48,12 +75,14 @@ void Game::handleEvents()
         }
         
         // TODO : Handle other events
+        _player->handleEvent(event);
     }
 }
 
 void Game::update()
 {
     // TODO : Add game logic, update game objects
+    _player->update(_frameTimer.getFrameTime());
 }
 
 void Game::render()
@@ -63,6 +92,7 @@ void Game::render()
 
     // Draw game objects here
     // TODO : Draw game objects
+    _player->render(_windowManager->getRenderer());
 
     // Show window debug infos (fps and average fps)
 #ifdef _DEBUG
@@ -83,28 +113,15 @@ void Game::run()
 {
    while (_isRunning)
     {
-        // Start frame timing
-        /*frameData.totalFrames++;
-        frameData.frameStart = SDL_GetTicks();*/
+       // frame start timing
        _frameTimer.startFrame();
-
         
+       // game loop
         handleEvents();
         update();
         render();
 
-        //// Calculate frame time
-        //frameData.frameTime = SDL_GetTicks() - frameData.frameStart;
-
-        //// Cap FPS to 60 by delaying if the frame was faster
-        //if (frameData.frameTime < frameData.frameDelay)
-        //{
-        //    SDL_Delay(frameData.frameDelay - frameData.frameTime);
-        //}
-
-        //// Update statistics
-        //frameData.totalFrameTicks += SDL_GetTicks() - frameData.frameStart;
-        //frameData.framePerSecond = 1000.0f / (SDL_GetTicks() - frameData.frameStart);
+        // end frame timing and statistics update
         _frameTimer.endFrame(1000/FRAME_RATE);
     }
 }
