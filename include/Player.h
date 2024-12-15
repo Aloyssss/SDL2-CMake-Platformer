@@ -2,15 +2,15 @@
 
 /* Includes */
 #include "Header.h"
-#include "Entity.h"
+#include "GameObject.h"
 #include "Camera.h"
 
 /* Player class definition */
-class Player : public Entity 
+class Player : public GameObject 
 {
 public:
     Player(float x, float y, SDL_Texture* texture, Camera* camera)
-        : Entity(x, y), _speed(200.0f), _texture(texture), _camera(camera) { }
+        : GameObject(x, y), _speed(200.0f), _texture(texture), _camera(camera) { }
 
     // Core methods override
     void handleEvent(const SDL_Event& event) override;

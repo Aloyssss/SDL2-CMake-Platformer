@@ -25,6 +25,7 @@ bool TextureManager::loadTexture(const std::string& texName, const std::string& 
         return false;
     }
     _textures[texName] = SDL_CreateTextureFromSurface(_renderer, image);
+    SDL_FreeSurface(image);
     return true;
 }
 

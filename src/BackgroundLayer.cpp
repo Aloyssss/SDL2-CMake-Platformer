@@ -1,7 +1,7 @@
 #include "BackgroundLayer.h"
 
 BackgroundLayer::BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture, Camera* camera)
-    : Entity(x, y), _scrollSpeed(scrollSpeed), _texture(texture), _camera(camera),
+    : GameObject(x, y), _scrollSpeed(scrollSpeed), _texture(texture), _camera(camera),
     _scrollOffset(0), _screenWidth(800), _screenHeight(600)
 {
     SDL_QueryTexture(_texture, NULL, NULL, &_tileWidth, &_tileHeight);

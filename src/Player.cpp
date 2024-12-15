@@ -51,9 +51,12 @@ void Player::render(SDL_Renderer* renderer) const
     if (_texture) 
     {
         SDL_Rect srcRect = { 0, 0, 100, 59 }; // Assuming the entire texture is 100x59
-        SDL_Rect destRect = { static_cast<int>(_position.x) - _camera->getView().x,
-                              static_cast<int>(_position.y) - _camera->getView().y,
+
+        Vector2f screenPos = _camera->worldToScreen(_position);
+        SDL_Rect destRect = { static_cast<int>(screenPos.x), 
+                              static_cast<int>(screenPos.y),
                               100, 59 }; // Position and size on screen
+
         SDL_RenderCopy(renderer, _texture, &srcRect, &destRect);
     }
 }

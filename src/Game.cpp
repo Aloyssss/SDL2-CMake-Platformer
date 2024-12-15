@@ -23,7 +23,15 @@ bool Game::init(std::string title, int width, int height)
     _windowManager = std::make_unique<WindowManager>(title, SCREEN_WIDTH, SCREEN_HEIGHT);
     _textManager = std::make_unique<TextManager>(_windowManager->getRenderer());
     _textureManager = std::make_unique<TextureManager>(_windowManager->getRenderer());
+
+    // Camera init
     _camera = std::make_unique<Camera>(SCREEN_WIDTH, SCREEN_HEIGHT, 10000, 1000);
+    _camera->setLerpFactor(0.05f);
+
+    // Init map
+    std::string tileset = "./ressources/map/spritesheet.png";
+    std::string json = "./ressources/map/map.json";
+    _tilemap = std::make_unique<Tilemap>(json, tileset, _windowManager->getRenderer(), _camera.get());
 
     // Init player textures
     _textureManager->loadTexture("player_atlas", "./ressources/texture_atlas/hero-atlas.png");
@@ -84,7 +92,10 @@ void Game::render()
     //SDL_RenderSetViewport(_windowManager->getRenderer(), &_camera->getView());
 
     // Draw background (camera affects it too)
-    _bgLayer1->render(_windowManager->getRenderer());
+    //_bgLayer1->render(_windowManager->getRenderer());
+
+    // Draw world
+    _tilemap->render();
 
     // Draw entities
     _player->render(_windowManager->getRenderer());
@@ -101,7 +112,7 @@ void Game::render()
     dest.y += 24;
     _textManager->renderText("default", avgStr, fg, dest);
     dest.y += 24;
-    _textManager->renderText("default", "Version 0.1.12", fg, dest);
+    _textManager->renderText("default", "Version 0.1.13", fg, dest);
 #endif
 
     // Draw everything to the screen

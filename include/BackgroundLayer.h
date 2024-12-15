@@ -2,11 +2,11 @@
 
 /* Includes */
 #include "Header.h"
-#include "Entity.h"
+#include "GameObject.h"
 #include "Camera.h"
 
 /* BackgroundLayer class definition */
-class BackgroundLayer : public Entity
+class BackgroundLayer : public GameObject
 {
 public:
     BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture, Camera* camera);

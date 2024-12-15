@@ -2,15 +2,14 @@
 
 /* Includes */
 #include "Header.h"
-#include "Vector2.h"
 
-/* Entity abstract class definition */
-class Entity {
+/* GameObject abstract class definition */
+class GameObject {
 public:
     // Constructor / Destructor
-    Entity(float x = 0, float y = 0)
+    GameObject(float x = 0, float y = 0)
         : _position(x, y), _isActive(true) { }
-    virtual ~Entity() = default;
+    virtual ~GameObject() = default;
 
     // Core methods
     virtual void handleEvent(const SDL_Event& event) = 0;  // Handle specific events

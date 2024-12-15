@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Player.h"
 #include "BackgroundLayer.h"
+#include "Tilemap.h"
 
 /* FrameTimer class definition */
 class FrameTimer
@@ -75,6 +76,7 @@ private:
 	bool _isRunning;
 
 	// Game objects
+	std::unique_ptr<Tilemap> _tilemap;
 	std::unique_ptr<Player> _player;
 	std::unique_ptr<BackgroundLayer> _bgLayer1;
 };
