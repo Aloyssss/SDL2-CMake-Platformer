@@ -1,8 +1,8 @@
 #include "BackgroundLayer.h"
-#include "BackgroundLayer.h"
 
-BackgroundLayer::BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture)
-    : Entity(x, y), _scrollSpeed(scrollSpeed), _texture(texture), _scrollOffset(0), _screenWidth(800), _screenHeight(600)
+BackgroundLayer::BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture, Camera* camera)
+    : Entity(x, y), _scrollSpeed(scrollSpeed), _texture(texture), _camera(camera),
+    _scrollOffset(0), _screenWidth(800), _screenHeight(600)
 {
     SDL_QueryTexture(_texture, NULL, NULL, &_tileWidth, &_tileHeight);
 }
@@ -39,7 +39,9 @@ void BackgroundLayer::render(SDL_Renderer* renderer) const
 
     for (int x = -currentOffset; x < _screenWidth; x += _tileWidth) {
         srcRect = { 0, 0, _tileWidth, _tileHeight };
-        destRect = { x, 0, _tileWidth, _screenHeight };
+        destRect = { x - _camera->getView().x,
+                    -170 - _camera->getView().y,
+                    _tileWidth, _tileHeight };
 
         SDL_RenderCopy(renderer, _texture, &srcRect, &destRect);
     }

@@ -3,13 +3,13 @@
 /* Includes */
 #include "Header.h"
 #include "Entity.h"
-#include "Player.h"
+#include "Camera.h"
 
 /* BackgroundLayer class definition */
 class BackgroundLayer : public Entity
 {
 public:
-    BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture);
+    BackgroundLayer(float x, float y, float scrollSpeed, SDL_Texture* texture, Camera* camera);
 
     // Core methods override
     void handleEvent(const SDL_Event& event) override;
@@ -19,10 +19,12 @@ public:
     // Getters / Setters
     void setScrollSpeed(float newSpeed) { _scrollSpeed = newSpeed; }
     void setTexture(SDL_Texture* newTexture) { _texture = newTexture; }
+    SDL_Texture* getTexture() { return _texture; }
+    int getTileWidth() { return _tileWidth; }
 
 private:
     SDL_Texture* _texture;
-    Player* _player;
+    Camera* _camera;
 
     int _screenWidth;
     int _screenHeight;

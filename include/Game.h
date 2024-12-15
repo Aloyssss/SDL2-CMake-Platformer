@@ -5,6 +5,7 @@
 #include "TextManager.h"
 #include "TextureManager.h"
 
+#include "Camera.h"
 #include "Player.h"
 #include "BackgroundLayer.h"
 
@@ -53,7 +54,7 @@ public:
 	~Game();
 
 	// Init functions
-	bool init(const char* title, int width, int height);
+	bool init(std::string title, int width, int height);
 	void cleanup();
 
 	// Game loop functions
@@ -67,6 +68,7 @@ private:
 	std::unique_ptr<WindowManager> _windowManager;
 	std::unique_ptr<TextManager> _textManager;
 	std::unique_ptr<TextureManager> _textureManager;
+	std::unique_ptr<Camera> _camera;
 	FrameTimer _frameTimer;
 
 	// Game loop variables

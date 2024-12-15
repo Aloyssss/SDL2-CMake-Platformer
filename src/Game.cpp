@@ -10,7 +10,7 @@ Game::~Game()
     cleanup();
 }
 
-bool Game::init(const char* title, int width, int height)
+bool Game::init(std::string title, int width, int height)
 {
     // SDL init, must be the first init called
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) 
@@ -20,16 +20,17 @@ bool Game::init(const char* title, int width, int height)
     }
 
     // Init engine components
-    _windowManager = std::make_unique<WindowManager>("Game", SCREEN_WIDTH, SCREEN_HEIGHT);
+    _windowManager = std::make_unique<WindowManager>(title, SCREEN_WIDTH, SCREEN_HEIGHT);
     _textManager = std::make_unique<TextManager>(_windowManager->getRenderer());
     _textureManager = std::make_unique<TextureManager>(_windowManager->getRenderer());
+    _camera = std::make_unique<Camera>(SCREEN_WIDTH, SCREEN_HEIGHT, 10000, 1000);
 
     // Init player textures
     _textureManager->loadTexture("player_atlas", "./ressources/texture_atlas/hero-atlas.png");
-    _player = std::make_unique<Player>(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, _textureManager->getTexture("player_atlas"));
+    _player = std::make_unique<Player>(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, _textureManager->getTexture("player_atlas"), _camera.get());
 
     _textureManager->loadTexture("bg1", "./ressources/texture_atlas/background.png");
-    _bgLayer1 = std::make_unique<BackgroundLayer>(0.f, 0.f, 200.f, _textureManager->getTexture("bg1"));
+    _bgLayer1 = std::make_unique<BackgroundLayer>(0.f, 0.f, 200.f, _textureManager->getTexture("bg1"), _camera.get());
 
     // Init fonts
     _textManager->loadFont("default", "ressources/fonts/RobotoCondensed-Regular.ttf", 14);
@@ -63,11 +64,15 @@ void Game::handleEvents()
 void Game::update()
 {
     // TODO : Add game logic, update game objects
+
+    // Camera update
+    _camera->follow(_player->getPosition().x, _player->getPosition().y - 200);
+
     _player->update(_frameTimer.getFrameTimeS());
 
     // Background update based on player position
-    _bgLayer1->setScrollSpeed((_player->getVelocity().x) * _player->getSpeed());
-    _bgLayer1->update(_frameTimer.getFrameTimeS());
+    /*_bgLayer1->setScrollSpeed((_player->getVelocity().x) * _player->getSpeed());
+    _bgLayer1->update(_frameTimer.getFrameTimeS());*/
 }
 
 void Game::render()
@@ -75,9 +80,10 @@ void Game::render()
     // Clear screen
     _windowManager->clear();
 
-    // TODO : Draw game objects
+    // Set viewport with camera rectangle
+    //SDL_RenderSetViewport(_windowManager->getRenderer(), &_camera->getView());
 
-    // Draw background
+    // Draw background (camera affects it too)
     _bgLayer1->render(_windowManager->getRenderer());
 
     // Draw entities
@@ -85,6 +91,8 @@ void Game::render()
 
     // Show window debug infos (fps and average fps)
 #ifdef _DEBUG
+    SDL_Rect defaultViewport = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    SDL_RenderSetViewport(_windowManager->getRenderer(), &defaultViewport); // Reset for debug UI
     std::string fpsStr = "Current FPS: " + std::to_string(_frameTimer.getCurrentFPS());
     std::string avgStr = "Average FPS: " + std::to_string(_frameTimer.getAverageFPS());
     SDL_Color fg = { 255, 255, 255 };

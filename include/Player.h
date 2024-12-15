@@ -3,13 +3,14 @@
 /* Includes */
 #include "Header.h"
 #include "Entity.h"
+#include "Camera.h"
 
 /* Player class definition */
 class Player : public Entity 
 {
 public:
-    Player(float x, float y, SDL_Texture* texture)
-        : Entity(x, y), _speed(200.0f), _texture(texture) { }
+    Player(float x, float y, SDL_Texture* texture, Camera* camera)
+        : Entity(x, y), _speed(200.0f), _texture(texture), _camera(camera) { }
 
     // Core methods override
     void handleEvent(const SDL_Event& event) override;
@@ -29,4 +30,5 @@ private:
     Vector2f _velocity = { 0, 0 }; // Movement direction
     float _speed;                  // Movement speed in pixels/second
     SDL_Texture* _texture;
+    Camera* _camera;
 };
