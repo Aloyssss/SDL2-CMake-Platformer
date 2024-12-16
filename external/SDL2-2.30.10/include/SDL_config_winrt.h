@@ -204,7 +204,7 @@
 #define SDL_VIDEO_OPENGL_ES2 1
 #define SDL_VIDEO_OPENGL_EGL 1
 
-/* Enable appropriate renderer(s) */
+/* Enable appropriate _renderer(s) */
 #define SDL_VIDEO_RENDER_D3D11  1
 
 /* Disable D3D12 as it's not implemented for WinRT */

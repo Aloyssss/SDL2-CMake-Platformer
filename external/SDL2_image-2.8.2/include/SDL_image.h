@@ -372,7 +372,7 @@ extern DECLSPEC SDL_Surface * SDLCALL IMG_Load_RW(SDL_RWops *src, int freesrc);
  * When done with the returned texture, the app should dispose of it with a
  * call to SDL_DestroyTexture().
  *
- * \param renderer the SDL_Renderer to use to create the GPU texture.
+ * \param _renderer the SDL_Renderer to use to create the GPU texture.
  * \param file a path on the filesystem to load an image from.
  * \returns a new texture, or NULL on error.
  *
@@ -403,7 +403,7 @@ extern DECLSPEC SDL_Texture * SDLCALL IMG_LoadTexture(SDL_Renderer *renderer, co
  * from the RWops during this call in any case.
  *
  * There is a separate function to read files from disk without having to deal
- * with SDL_RWops: `IMG_LoadTexture(renderer, "filename.jpg")` will call this
+ * with SDL_RWops: `IMG_LoadTexture(_renderer, "filename.jpg")` will call this
  * function and manage those details for you, determining the file type from
  * the filename's extension.
  *
@@ -417,7 +417,7 @@ extern DECLSPEC SDL_Texture * SDLCALL IMG_LoadTexture(SDL_Renderer *renderer, co
  * When done with the returned texture, the app should dispose of it with a
  * call to SDL_DestroyTexture().
  *
- * \param renderer the SDL_Renderer to use to create the GPU texture.
+ * \param _renderer the SDL_Renderer to use to create the GPU texture.
  * \param src an SDL_RWops that data will be read from.
  * \param freesrc non-zero to close/free the SDL_RWops before returning, zero
  *                to leave it open.
@@ -470,7 +470,7 @@ extern DECLSPEC SDL_Texture * SDLCALL IMG_LoadTexture_RW(SDL_Renderer *renderer,
  * When done with the returned texture, the app should dispose of it with a
  * call to SDL_DestroyTexture().
  *
- * \param renderer the SDL_Renderer to use to create the GPU texture.
+ * \param _renderer the SDL_Renderer to use to create the GPU texture.
  * \param src an SDL_RWops that data will be read from.
  * \param freesrc non-zero to close/free the SDL_RWops before returning, zero
  *                to leave it open.

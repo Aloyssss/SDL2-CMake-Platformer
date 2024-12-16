@@ -44,7 +44,7 @@ extern "C" {
 /**
  *  \brief Draw a string in the currently set font.
  *
- *  \param renderer The renderer to draw on.
+ *  \param _renderer The _renderer to draw on.
  *  \param x The X coordinate of the upper left corner of the character.
  *  \param y The Y coordinate of the upper left corner of the character.
  *  \param c The character to draw.
@@ -58,7 +58,7 @@ int SDLTest_DrawCharacter(SDL_Renderer *renderer, int x, int y, Uint32 c);
  *
  *  The font currently only supports characters in the Basic Latin and Latin-1 Supplement sets.
  *
- *  \param renderer The renderer to draw on.
+ *  \param _renderer The _renderer to draw on.
  *  \param x The X coordinate of the upper left corner of the string.
  *  \param y The Y coordinate of the upper left corner of the string.
  *  \param s The string to draw.
@@ -98,7 +98,7 @@ SDLTest_TextWindow *SDLTest_TextWindowCreate(int x, int y, int w, int h);
  *  This function should be called every frame to display the text
  *
  *  \param textwin The text output window
- *  \param renderer The renderer to use for display
+ *  \param _renderer The _renderer to use for display
  *
  *  \since This function is available since SDL 2.24.0
  */

@@ -25,13 +25,14 @@ bool Game::init(std::string title, int width, int height)
     _textureManager = std::make_unique<TextureManager>(_windowManager->getRenderer());
 
     // Camera init
-    _camera = std::make_unique<Camera>(SCREEN_WIDTH, SCREEN_HEIGHT, 10000, 1000);
+    _camera = std::make_unique<Camera>(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
     _camera->setLerpFactor(0.05f);
 
     // Init map
-    std::string tileset = "./ressources/map/spritesheet.png";
-    std::string json = "./ressources/map/map.json";
+    std::string tileset = "./ressources/map/spritesheet2.png";
+    std::string json = "./ressources/map/map2.json";
     _tilemap = std::make_unique<Tilemap>(json, tileset, _windowManager->getRenderer(), _camera.get());
+    _camera->setWorldBounds(_tilemap->getWorldBounds().x, _tilemap->getWorldBounds().y);
 
     // Init player textures
     _textureManager->loadTexture("player_atlas", "./ressources/texture_atlas/hero-atlas.png");
@@ -88,14 +89,14 @@ void Game::render()
     // Clear screen
     _windowManager->clear();
 
-    // Set viewport with camera rectangle
+    // Set viewport with _camera rectangle
     //SDL_RenderSetViewport(_windowManager->getRenderer(), &_camera->getView());
 
-    // Draw background (camera affects it too)
+    // Draw background (_camera affects it too)
     //_bgLayer1->render(_windowManager->getRenderer());
 
     // Draw world
-    _tilemap->render();
+    _tilemap->render(_windowManager->getRenderer());
 
     // Draw entities
     _player->render(_windowManager->getRenderer());

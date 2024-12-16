@@ -216,9 +216,9 @@ void SDLTest_CommonEvent(SDLTest_CommonState * state, SDL_Event * event, int *do
 void SDLTest_CommonQuit(SDLTest_CommonState * state);
 
 /**
- * \brief Draws various window information (position, size, etc.) to the renderer.
+ * \brief Draws various window information (position, size, etc.) to the _renderer.
  *
- * \param renderer The renderer to draw to.
+ * \param _renderer The _renderer to draw to.
  * \param window The window whose information should be displayed.
  * \param usedHeight Returns the height used, so the caller can draw more below.
  *
