@@ -1,10 +1,10 @@
 
-#include "Header.h"
+#include "../Utils/Header.h"
 #include "Camera.h"
 #include <fstream>
 
 // scale factor TO BE REMOVED
-const float scale = 2.f;
+const float scale = 1.f;
 
 using json = nlohmann::json;
 

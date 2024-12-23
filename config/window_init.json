@@ -1,0 +1,9 @@
+{
+  "title": "Project Dantes",
+  "screen_width": 1920,
+  "screen_height": 1080,
+  "base_width": 640,
+  "base_height": 360,
+  "framerate": 60,
+  "_comment": "Ne pas modifier"
+}

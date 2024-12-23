@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera(int screenWidth, int screenHeight, int worldWidth, int worldHeight)
-    : _view{ 0, 0, screenWidth, screenHeight },
+    : _view{ 0, 0, 640, 360 },
     _worldWidth(worldWidth), _worldHeight(worldHeight),
     _screenWidth(screenWidth), _screenHeight(screenHeight),
     lerpFactor(0.1f) 

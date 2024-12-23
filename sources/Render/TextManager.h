@@ -1,7 +1,7 @@
 #pragma once
 
 /* Includes */
-#include "Header.h"
+#include "../Utils/Header.h"
 
 /* TextManager class definition */
 class TextManager
